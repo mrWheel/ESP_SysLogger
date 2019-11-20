@@ -1,10 +1,9 @@
 /*
 **  Program   : ESP_SysLogger
 */
-#define _FW_VERSION "v0.1.0 (20-11-2019)"
-
+#define _FW_VERSION "v1.0.0 (20-11-2019)"
 /*
-**  Copyright (c) 2019 Willem Aandewiel / Erik Meinders
+**  Copyright (c) 2019 Willem Aandewiel
 **
 **  TERMS OF USE: MIT License. See bottom of file.
 ***************************************************************************/
