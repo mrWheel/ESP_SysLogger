@@ -3,8 +3,11 @@
 ###########################################
 
 ###########################################
-# Datatypes (KEYWORD1)
+# Datatypes             (KEYWORD1)
 ###########################################
+
+ESPSL                    KEYWORD1
+ESP_SysLogger            KEYWORD1
 
 ###########################################
 # Methods and Functions (KEYWORD2)
