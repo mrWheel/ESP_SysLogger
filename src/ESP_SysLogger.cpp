@@ -219,6 +219,51 @@ boolean ESPSL::init()
 //-------------------------------------------------------------------------------------
 boolean ESPSL::write(const char* logLine) 
 {
+  if (_Debug(3)) Serial.printf("ESPSL::write(%s)..\r\n", logLine);
+
+  int16_t bytesWritten;
+  uint8_t seekToLine;
+  int nextFree;
+  _cRec[0] = '\0';  
+  
+  // --- check if the file exists and can be opened ---
+  File _logFile  = SPIFFS.open(_sysLogFile, "r+");    // open for reading and writing
+  if (!_logFile) {
+    Serial.printf("ESPSL::write(): Some error opening [%s] .. bailing out!\r\n", _sysLogFile);
+    _logFile.close();
+    return false;
+  } // if (!_logFile)
+
+  nextFree = (_lastUsedLineID % _noLines) + 1;
+  if (_Debug(4)) Serial.printf("ESPSL::write(s): oldest[%8d], last[%8d], nextFree Slot[%3d]\r\n"
+                                                      , _oldestLineID
+                                                      , _lastUsedLineID
+                                                      , nextFree);
+
+  sprintf(_cRec, "%8d;%s ", (_lastUsedLineID +1), logLine);
+  fixLineWidth(_cRec, _lineWidth);
+  seekToLine = (_oldestLineID % _noLines) +1; // always skip rec. 0 (status rec)
+  if (_Debug(4)) Serial.printf("ESPSL::write() -> seek[%d] [%s]\r\n", seekToLine, _cRec);
+  if (!_logFile.seek((seekToLine * _lineWidth), SeekSet)) {
+    Serial.printf("ESPSL::write(): seek to position [%d] failed\r\n", seekToLine);
+  }
+  bytesWritten = _logFile.print(_cRec);
+  if (bytesWritten != _lineWidth) {
+      Serial.printf("ESPSL::write(): ERROR!! written [%d] bytes but should have been [%d]\r\n"
+                                       , bytesWritten, _lineWidth);
+      _logFile.close();
+      return false;
+  }
+
+  _lastUsedLineID++;
+  _oldestLineID++;
+  nextFree = (_lastUsedLineID % _noLines) + 1;  // always skip rec "0"
+  if (_Debug(4)) Serial.printf("ESPSL::write(e): oldest[%8d], last[%8d], nextFree Slot[%3d]\r\n"
+                                                      , _oldestLineID
+                                                      , _lastUsedLineID
+                                                      , nextFree);
+  
+  _logFile.close();
 
 } // write()
 

@@ -151,9 +151,11 @@ void setup()
 
 #if defined(ESP32)
   Serial.println("just started ..");
+  sysLog.write("---------------------------------------------------");
   sysLog.writef("Just Started [%d]", (sysLog.getLastLineID() +1));
 #else
   Serial.printf("Reset Reason [%s]\r\n", ESP.getResetReason().c_str());
+  sysLog.write("---------------------------------------------------");
   sysLog.writef("Reset Reason [%s]", ESP.getResetReason().c_str());
 #endif
 
