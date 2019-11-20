@@ -1,7 +1,7 @@
 /*
 **  Program   : ESP_SysLogger
 */
-#define _FW_VERSION "v0.0.1 (19-11-2019)"
+#define _FW_VERSION "v0.1.0 (20-11-2019)"
 
 /*
 **  Copyright (c) 2019 Willem Aandewiel / Erik Meinders
@@ -102,11 +102,18 @@ void testReadnext()
 
 } // testReadNext()
 
+
 //-------------------------------------------------------------------------
 void setup() 
 {
   Serial.begin(115200);
+#if defined(ESP8266)
   Serial.println("\nESP8266: Start ESP System Logger ....\n");
+#elif defined(ESP32)
+  Serial.println("\nESP32: Start ESP System Logger ....\n");
+#else
+  Serial.println("\nDon't know: Start ESP System Logger ....\n");
+#endif
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
@@ -138,6 +145,7 @@ void setup()
   if (!sysLog.begin(95, 60)) {
   //if (!sysLog.begin(75, 70, true)) {
     Serial.println("Error opening sysLog!");
+    delay(10000);
   }
   sysLog.setDebugLvl(2);
   sysLog.status();
@@ -156,6 +164,7 @@ void setup()
   //listSPIFFS();
 
   Serial.println("\nsetup() done .. \n");
+  delay(5000);
   
 } // setup()
 
