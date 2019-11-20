@@ -8,12 +8,15 @@ You need to include "ESP_SysLogger.h"
 #include "ESP_SysLogger.h"
 ```
 
-Then you need to create the ESPSL object
+Then you need to create the ESPSL object 
 ```
 ESPSL sysLog;
 ```
 In `setup()` add the following code to create or open a log file of 100 lines, 80 chars/line
 ```
+   SPIFFS.begin();
+   .
+   .
    if (!sysLog.begin(100, 80)) {
      Serial.println("sysLog.begin() error!");
      delay(10000);
