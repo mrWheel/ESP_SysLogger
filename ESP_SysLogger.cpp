@@ -7,7 +7,6 @@
 ***************************************************************************/
 
 #include "ESP_SysLogger.h"
-//#include "Arduino.h"
 
 //Constructor
 ESPSL::ESPSL() { }
