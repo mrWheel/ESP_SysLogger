@@ -68,6 +68,7 @@ looks like this:
 this is added by the macro:
 ```
   [-time---][FreeHeap/mBlck] [Function  (lineNr)]
+  [12:30:22][  46120| 45952] [setup       ( 179)]
 ```
 
 ... more to come
