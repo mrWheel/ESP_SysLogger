@@ -1,7 +1,7 @@
 /*
 **  Program   : ESP_SysLogger.h
 **
-**  Copyright (c) 2019 Willem Aandewiel / Erik Meinders
+**  Copyright (c) 2019 Willem Aandewiel
 **
 **  TERMS OF USE: MIT License. See bottom of file.
 ***************************************************************************/
@@ -20,15 +20,17 @@ class ESPSL {
 public:
   ESPSL();
 
-  boolean   begin(uint8_t depth,  uint8_t lineWidth);
-  boolean   begin(uint8_t depth,  uint8_t lineWidth, boolean mode);
-  boolean   create(uint8_t depth, uint8_t lineWidth);
+  boolean   begin(uint16_t depth,  uint16_t lineWidth);
+  boolean   begin(uint16_t depth,  uint16_t lineWidth, boolean mode);
+  boolean   create(uint16_t depth, uint16_t lineWidth);
   boolean   init();
   boolean   status();
   boolean   write(const char*);
   boolean   writef(const char *fmt, ...);
+  boolean   writeD(const char *callFunc, int atLine, const char *fmt, ...);
+  boolean   writeD(int HH, int MM, int SS, const char *callFunc, int atLine, const char *fmt, ...);
   boolean   startReading(int16_t startLine, uint8_t numLines);    // Returns last line read
-  boolean   startReading(int16_t startLine);    // Returns last line read
+  boolean   startReading(int16_t startLine);                      // Returns last line read
   String    readNextLine();
   String    dumpLogFile();
   boolean   removeSysLog();
@@ -38,6 +40,7 @@ public:
 private:
 
   const char* _sysLogFile = "/sysLog.dat";
+  int16_t			_MAXLINEWIDTH = 150;
   uint32_t    _lastUsedLineID;
   uint32_t    _oldestLineID;
   int32_t     _noLines;
@@ -45,7 +48,7 @@ private:
   uint32_t    _readPointer;
   int16_t     _readEnd;
   int8_t      _debugLvl = 0;
-  char        _cRec[255];
+  char        _cRec[_MAXLINEWIDTH +20];
   const char* _emptyID = "@!@!@!@!";
   
   boolean     checkSysLogFileSize(const char* func, int32_t cSize);
