@@ -40,7 +40,7 @@ public:
 private:
 
   const char* _sysLogFile = "/sysLog.dat";
-  int16_t			_MAXLINEWIDTH = 150;
+  int16_t     _MAXLINEWIDTH = 150;
   uint32_t    _lastUsedLineID;
   uint32_t    _oldestLineID;
   int32_t     _noLines;
