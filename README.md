@@ -48,4 +48,26 @@ or just the last 15 lines
    }
 ```
 
+With a simple macro you can add Debug info to your log-lines
+```
+#if defined(_Time_h)    // _Time_h is defined by #include <TimeLib.h>
+  #define writeToSysLog(...) ({ sysLog.writeD(hour(), minute(), second(), __FUNCTION__, __LINE__, __VA_ARGS__); })
+#else
+  #define writeToSysLog(...) ({ sysLog.writeD(__FUNCTION__, __LINE__, __VA_ARGS__); })
+#endif
+```
+This Logline:
+```
+     writeToSysLog("Reset Reason [%s]", ESP.getResetReason().c_str());
+```
+looks like this:
+```
+  [12:30:22][  46120| 45952] [setup       ( 179)] Reset Reason [External System] 
+  [19:51:03][  45616| 44912] [showBareLogF(  62)] Dump logFile [sysLog.dumpLogFile()]
+```
+this is added by the macro:
+```
+  [-time---][FreeHeap/mBlck] [Function  (lineNr)]
+```
+
 ... more to come
