@@ -16,6 +16,8 @@
 #endif
 
 class ESPSL {
+
+  #define _MAXLINEWIDTH 150
   
 public:
   ESPSL();
@@ -27,10 +29,10 @@ public:
   boolean   status();
   boolean   write(const char*);
   boolean   writef(const char *fmt, ...);
-  boolean	  writeD(const char *callFunc, int atLine, const char *fmt, ...);
+  boolean   writeD(const char *callFunc, int atLine, const char *fmt, ...);
   boolean   writeD(int HH, int MM, int SS, const char *callFunc, int atLine, const char *fmt, ...);
   boolean   startReading(int16_t startLine, uint8_t numLines);    // Returns last line read
-  boolean   startReading(int16_t startLine);    									// Returns last line read
+  boolean   startReading(int16_t startLine);                      // Returns last line read
   String    readNextLine();
   String    dumpLogFile();
   boolean   removeSysLog();
@@ -40,15 +42,14 @@ public:
 private:
 
   const char* _sysLogFile = "/sysLog.dat";
-  int16_t			_MAXLINEWIDTH = 150;
   uint32_t    _lastUsedLineID;
   uint32_t    _oldestLineID;
   int32_t     _noLines;
   int32_t     _lineWidth;
   uint32_t    _readPointer;
-  int16_t     _readEnd;
+  uint32_t    _readEnd;
   int8_t      _debugLvl = 0;
-  char        _cRec[255];
+  char        _cRec[_MAXLINEWIDTH +20];
   const char* _emptyID = "@!@!@!@!";
   
   boolean     checkSysLogFileSize(const char* func, int32_t cSize);

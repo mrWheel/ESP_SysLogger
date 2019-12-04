@@ -17,7 +17,7 @@ boolean ESPSL::begin(uint16_t depth, uint16_t lineWidth)
 {
   if (_Debug(1)) Serial.printf("ESPSL::begin(%d, %d)..\n", depth, lineWidth);
 
-  char buffer[_MAXLINEWIDTH + 10];
+  char lineBuf[_MAXLINEWIDTH + 10];
   int16_t fileSize;
 
   if (lineWidth > _MAXLINEWIDTH) lineWidth = _MAXLINEWIDTH;
@@ -37,10 +37,10 @@ boolean ESPSL::begin(uint16_t depth, uint16_t lineWidth)
 
   if (_logFile.available() > 0) {
     if (_Debug(3)) Serial.println("ESPSL::begin(): read record [0]");
-    int l = _logFile.readBytesUntil('\n', buffer, sizeof(buffer));
-        buffer[l]   = '\0';
-        if (_Debug(4)) Serial.printf("ESPSL::begin(): rec[0] [%s]\r\n", buffer);
-        sscanf(buffer,"%d;%d;%d;" 
+    int l = _logFile.readBytesUntil('\n', lineBuf, sizeof(lineBuf));
+        lineBuf[l]   = '\0';
+        if (_Debug(4)) Serial.printf("ESPSL::begin(): rec[0] [%s]\r\n", lineBuf);
+        sscanf(lineBuf,"%u;%d;%d;" 
                                 , &_lastUsedLineID
                                 , &_noLines
                                 , &_lineWidth);
@@ -71,7 +71,7 @@ boolean ESPSL::begin(uint16_t depth, uint16_t lineWidth)
 boolean ESPSL::begin(uint16_t depth, uint16_t lineWidth, boolean mode) 
 {
   if (_Debug(1)) Serial.printf("ESPSL::begin(%d, %d, %d)..\n", depth, lineWidth, mode);
-
+  
   if (lineWidth > _MAXLINEWIDTH) lineWidth = _MAXLINEWIDTH;
 
   if (mode) {
@@ -149,8 +149,8 @@ boolean ESPSL::init()
 {
   if (_Debug(1)) Serial.println("ESPSL::init()..");
 
-  char logText[255];
-  char buffer[255];
+  char logText[_MAXLINEWIDTH +20];
+  char lineBuf[_MAXLINEWIDTH +10];
   int16_t recNr = 0;
   //_nextFree = 0;
       
@@ -171,9 +171,9 @@ boolean ESPSL::init()
       Serial.printf("ESPSL::init(): seek to position [%d] failed\r\n", recNr);
     }
     if (_Debug(4)) Serial.printf("ESPSL::init(): -> read record (recNr) [%d]\r\n", recNr);
-    int l = _logFile.readBytesUntil('\n', buffer, _lineWidth);
-        buffer[l] = '\0';
-        sscanf(buffer,"%d;%[^\0]", 
+    int l = _logFile.readBytesUntil('\n', lineBuf, _lineWidth);
+        lineBuf[l] = '\0';
+        sscanf(lineBuf,"%u;%[^\0]", 
             &_oldestLineID,
             logText);
         if (_Debug(4)) Serial.printf("ESPSL::init(): testing recNr[%2d] -> [%08d][%s]\r\n", recNr
@@ -264,7 +264,7 @@ boolean ESPSL::writef(const char *fmt, ...)
   int32_t 	bytesWritten;
   uint16_t 	seekToLine;
   int nextFree;
-  char buffer[_MAXLINEWIDTH + 10];
+  char lineBuf[_MAXLINEWIDTH + 10];
   _cRec[0] = '\0';  
   
   // --- check if the file exists and can be opened ---
@@ -283,10 +283,10 @@ boolean ESPSL::writef(const char *fmt, ...)
 
   va_list args;
   va_start (args, fmt);
-  vsnprintf (buffer, (_MAXLINEWIDTH), fmt, args);
+  vsnprintf (lineBuf, (_MAXLINEWIDTH), fmt, args);
   va_end (args);
 
-  sprintf(_cRec, "%8d;%s ", (_lastUsedLineID +1), buffer);
+  sprintf(_cRec, "%8d;%s ", (_lastUsedLineID +1), lineBuf);
   fixLineWidth(_cRec, _lineWidth);
   seekToLine = (_oldestLineID % _noLines) +1; // always skip rec. 0 (status rec)
   if (_Debug(4)) Serial.printf("ESPSL::writef() -> seek[%d] [%s]\r\n", seekToLine, _cRec);
@@ -317,11 +317,11 @@ boolean ESPSL::writef(const char *fmt, ...)
 //-------------------------------------------------------------------------------------
 boolean ESPSL::writeD(const char *callFunc, int atLine, const char *fmt, ...)
 {
-	char tLine[_MAXLINEWIDTH + 10];
-  char buffer[_MAXLINEWIDTH +1];
+  char tLine[_MAXLINEWIDTH + 10];
+  char lineBuf[_MAXLINEWIDTH +10];
   
-  tLine[0] 	= '\0';
-  buffer[0]	= '\0';
+  tLine[0] 	  = '\0';
+  lineBuf[0]  = '\0';
 
 #if defined(ESP8266)
   sprintf(tLine, "[%7u|%6u] [%-12.12s(%4d)] " , ESP.getFreeHeap(), ESP.getMaxFreeBlockSize()
@@ -332,14 +332,14 @@ boolean ESPSL::writeD(const char *callFunc, int atLine, const char *fmt, ...)
 
   va_list args;
   va_start (args, fmt);
-  vsnprintf (buffer, _lineWidth, fmt, args);
+  vsnprintf (lineBuf, _lineWidth, fmt, args);
   va_end (args);
-  while ((strlen(buffer) > 0) && (strlen(tLine) + strlen(buffer)) > (_MAXLINEWIDTH -1)) {
-  	buffer[strlen(buffer)-1] = '\0';
+  while ((strlen(lineBuf) > 0) && (strlen(tLine) + strlen(lineBuf)) > (_MAXLINEWIDTH -1)) {
+  	lineBuf[strlen(lineBuf)-1] = '\0';
   	yield();
   }
-	if ((strlen(tLine) + strlen(buffer)) < _MAXLINEWIDTH) {
-		strcat(tLine, buffer);
+	if ((strlen(tLine) + strlen(lineBuf)) < _MAXLINEWIDTH) {
+		strcat(tLine, lineBuf);
 	}
   write(tLine);
 
@@ -348,11 +348,11 @@ boolean ESPSL::writeD(const char *callFunc, int atLine, const char *fmt, ...)
 //-------------------------------------------------------------------------------------
 boolean ESPSL::writeD(int HH, int MM, int SS, const char *callFunc, int atLine, const char *fmt, ...)
 {
-	char tLine[_MAXLINEWIDTH + 10];
-  char buffer[_MAXLINEWIDTH +1];
+  char tLine[_MAXLINEWIDTH + 10];
+  char lineBuf[_MAXLINEWIDTH +10];
   
-  tLine[0] 	= '\0';
-  buffer[0]	= '\0';
+  tLine[0]    = '\0';
+  lineBuf[0]  = '\0';
 
 #if defined(ESP8266)
     sprintf(tLine, "[%02d:%02d:%02d][%7u|%6u] [%-12.12s(%4d)] "
@@ -367,14 +367,14 @@ boolean ESPSL::writeD(int HH, int MM, int SS, const char *callFunc, int atLine, 
 
   va_list args;
   va_start (args, fmt);
-  vsnprintf (buffer, _lineWidth, fmt, args);
+  vsnprintf (lineBuf, _lineWidth, fmt, args);
   va_end (args);
-  while ((strlen(buffer) > 0) && (strlen(tLine) + strlen(buffer)) > (_MAXLINEWIDTH -1)) {
-  	buffer[strlen(buffer)-1] = '\0';
+  while ((strlen(lineBuf) > 0) && (strlen(tLine) + strlen(lineBuf)) > (_MAXLINEWIDTH -1)) {
+  	lineBuf[strlen(lineBuf)-1] = '\0';
   	yield();
   }
-	if ((strlen(tLine) + strlen(buffer)) < _MAXLINEWIDTH) {
-		strcat(tLine, buffer);
+	if ((strlen(tLine) + strlen(lineBuf)) < _MAXLINEWIDTH) {
+		strcat(tLine, lineBuf);
 	}
   write(tLine);
 
@@ -423,7 +423,7 @@ String ESPSL::readNextLine()
   
   int32_t recNr = _readPointer;
   uint8_t seekToLine;
-  char    buffer[_lineWidth + 20];
+  char    lineBuf[_lineWidth +10];
   char    logText[_lineWidth];
 
   if (_readPointer > _readEnd) return("EOF");
@@ -444,10 +444,10 @@ String ESPSL::readNextLine()
     }
 
     uint32_t  lineID;
-    int l = _logFile.readBytesUntil('\n', buffer, sizeof(buffer));
-    buffer[l] = '\0';
-    //Serial.printf("ESPSL::init(): [%d] -> [%s]\r\n", l, buffer);
-    sscanf(buffer,"%d;%[^\0]", 
+    int l = _logFile.readBytesUntil('\n', lineBuf, sizeof(lineBuf));
+    lineBuf[l] = '\0';
+    //Serial.printf("ESPSL::init(): [%d] -> [%s]\r\n", l, lineBuf);
+    sscanf(lineBuf,"%u;%[^\0]", 
             &lineID,
             logText);
 
@@ -459,7 +459,7 @@ String ESPSL::readNextLine()
     _readPointer++;
     if (String(logText).indexOf(String(_emptyID)) == -1) {
       _logFile.close();
-      if (_Debug(3)) return String(buffer);
+      if (_Debug(3)) return String(lineBuf);
       else           return String(logText);
     } else {
       if (_Debug(4)) Serial.printf("ESPSL::readNextLine(): SKIP[%s]\r\n", logText);
@@ -478,7 +478,7 @@ String ESPSL::dumpLogFile()
 {
   if (_Debug(1)) Serial.println("ESPSL::dumpLogFile()..");
 
-  char    buffer[_lineWidth + 1];
+  char    lineBuf[_lineWidth +10];
   char    logText[_lineWidth];
   int16_t recNr;
       
@@ -495,10 +495,10 @@ String ESPSL::dumpLogFile()
   recNr = 0;
   while (_logFile.available() > 0) {
     uint32_t  lineID;
-    int l = _logFile.readBytesUntil('\n', buffer, sizeof(buffer));
-    buffer[l] = '\0';
-    if (_Debug(5)) Serial.printf("ESPSL::init(): [%d] -> [%s]\r\n", l, buffer);
-    sscanf(buffer,"%d;%[^\0]", 
+    int l = _logFile.readBytesUntil('\n', lineBuf, sizeof(lineBuf));
+    lineBuf[l] = '\0';
+    if (_Debug(5)) Serial.printf("ESPSL::init(): [%d] -> [%s]\r\n", l, lineBuf);
+    sscanf(lineBuf,"%u;%[^\0]", 
             &lineID,
             logText);
 
