@@ -1,7 +1,7 @@
 /*
 **  Program   : ESP_SysLogger
 */
-#define _FW_VERSION "v1.1.0 (02-12-2019)"
+#define _FW_VERSION "v1.1.0 (04-13-2019)"
 /*
 **  Copyright (c) 2019 Willem Aandewiel
 **
@@ -161,6 +161,8 @@ void setup()
 
   sysLog.setDebugLvl(5);
 
+  //--> max linesize is declared by _MAXLINEWIDTH in the
+  //    library and is set @150, so 160 will be truncated to 150!
   //if (!sysLog.begin(95, 160, true)) {   // create new sysLog file
   if (!sysLog.begin(95, 160)) {         // use existing sysLog file
     Serial.println("Error opening sysLog!");
