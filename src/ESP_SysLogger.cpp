@@ -69,7 +69,7 @@ boolean ESPSL::begin(uint16_t depth, uint16_t lineWidth)
   _logFile.close();
   init();
 
-  return true; //We're all setup!
+  return true; // We're all setup!
   
 } // begin()
 
@@ -582,7 +582,7 @@ boolean ESPSL::removeSysLog()
 
 //-------------------------------------------------------------------------------------
 // returns ESPSL status info
-boolean ESPSL::status() 
+void ESPSL::status() 
 {
   Serial.printf("ESPSL::status():      _lineWidth[%8d]\r\n", _lineWidth);
   Serial.printf("ESPSL::status():        _noLines[%8d]\r\n", _noLines);
@@ -593,7 +593,6 @@ boolean ESPSL::status()
                                                           , (_lastUsedLineID % _noLines)+1);
   }
   Serial.printf("ESPSL::status():       _debugLvl[%8d]\r\n", _debugLvl);
-  return true;
   
 } // status()
 

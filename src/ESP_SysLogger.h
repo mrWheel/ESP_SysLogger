@@ -25,9 +25,7 @@ public:
 
   boolean   begin(uint16_t depth,  uint16_t lineWidth);
   boolean   begin(uint16_t depth,  uint16_t lineWidth, boolean mode);
-  boolean   create(uint16_t depth, uint16_t lineWidth);
-  boolean   init();
-  boolean   status();
+  void      status();
   boolean   write(const char*);
   boolean   writef(const char *fmt, ...);
   boolean   writeD(const char *callFunc, int atLine, const char *fmt, ...);
@@ -53,6 +51,8 @@ private:
   char        _cRec[_MAXLINEWIDTH +20];
   const char* _emptyID = "@!@!@!@!";
   
+  boolean     create(uint16_t depth, uint16_t lineWidth);
+  boolean     init();
   boolean     checkSysLogFileSize(const char* func, int32_t cSize);
   void        fixLineWidth(char *inLine, int len);
   int16_t     sysLogFileSize();
