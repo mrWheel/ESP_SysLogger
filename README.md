@@ -173,7 +173,7 @@ Return uint32_t. Last used *lineID*.
 
 #### ESPSL::setDebugLvl(int8_t debugLvl)
 If *_DODEBUG* is defines in the *ESP_SysLogger.h* file you can use this
-method to set the debug level to display specific Debug lines to *SERIAL*.
+method to set the debug level to display specific Debug lines to *Serial*.
 
 
 ... more to come
