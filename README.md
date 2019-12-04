@@ -73,7 +73,7 @@ log line was written and the line number in that function:
 
 ## Methods
 
-#### ESPSL::begin(uint16_t depth,  uint16_t lineWidth);
+#### ESPSL::begin(uint16_t depth,  uint16_t lineWidth)
 Opens an existing system logfile. If there is no system logfile
 it will create one with *depth* lines each *lineWidth* chars wide.
 <br>
@@ -82,7 +82,7 @@ The max. *lineWidth* is **150 chars**
 Return boolean. *true* if succeeded, otherwise *false*
 
 
-#### ESPSL::begin(uint16_t depth,  uint16_t lineWidth, boolean mode);
+#### ESPSL::begin(uint16_t depth,  uint16_t lineWidth, boolean mode)
 if *mode* is **true**:<br>
 It will create a new system logfile with *depth* lines each *lineWidth* chars wide.
 <br>
@@ -93,40 +93,40 @@ it will create one with *depth* lines each *lineWidth* chars wide.
 Return boolean. *true* if succeeded, otherwise *false*
 
 
-#### ESPSL::status();
+#### ESPSL::status()
 Display some internal var's of the system logfile to *Serial*.
 
 
-#### ESPSL::write(const char*);
+#### ESPSL::write(const char*)
 This method will write a line of text to the system logfile.
 <br>
 Return boolean. *true* if succeeded, otherwise *false*
 
 
-#### ESPSL::writef(const char *fmt, ...);
+#### ESPSL::writef(const char *fmt, ...)
 This method will write a formatted line of text to the system logfile.
 The syntax is the same as *printf()*.
 <br>
 Return boolean. *true* if succeeded, otherwise *false*
 
 
-#### ESPSL::writeD(const char *callFunc, int atLine, const char *fmt, ...);
+#### ESPSL::writeD(const char *callFunc, int atLine, const char *fmt, ...)
 This method will write a formatted line of text to the system logfile.
 The syntax is the same as *printf()*.
-This method is ment to be used with the *writeToSysLog(a)* macro.
+This method is ment to be used with the *writeToSysLog()* macro.
 <br>
 Return boolean. *true* if succeeded, otherwise *false*
 
 
-#### ESPSL::writeD(int HH, int MM, int SS, const char *callFunc, int atLine, const char *fmt, ...);
+#### ESPSL::writeD(int HH, int MM, int SS, const char *callFunc, int atLine, const char *fmt, ...)
 This method will write a formatted line of text to the system logfile.
 The syntax is the same as *printf()*.
-This method is ment to be used with the *writeToSysLog(a)* macro.
+This method is ment to be used with the *writeToSysLog()* macro.
 <br>
 Return boolean. *true* if succeeded, otherwise *false*
 
 
-#### ESPSL::startReading(int16_t startLine, uint8_t numLines);    // Returns last line read
+#### ESPSL::startReading(int16_t startLine, uint8_t numLines)
 Sets the read pointer to *startLine* and the end pointer to
 *startLine* + *numLines*.
 <br>
@@ -135,7 +135,7 @@ This method should be called before using *readNextLine()*.
 Return boolean. *true* if succeeded, otherwise *false*
 
 
-#### ESPSL::startReading(int16_t startLine);                      // Returns last line read
+#### ESPSL::startReading(int16_t startLine)
 Sets the read pointer to *startLine*. If *startLine* is a negative
 number the read pointer will be set to *startLine* lines before *EOF*.
 <br>
@@ -144,26 +144,26 @@ This method should be called before using *readNextLine()*.
 Return boolean. *true* if succeeded, otherwise *false*
 
 
-#### ESPSL::readNextLine();
+#### ESPSL::readNextLine()
 Reads the next line from the system logfile and advances the read pointer one line.
 <br>
 Return String. Returns the next log line or *EOF*
 
 
-#### ESPSL::dumpLogFile();
+#### ESPSL::dumpLogFile()
 This method is for debugging. It display's all the lines in the
 system logfile to *Serial*.
 <br>
 Return String. Returns *EOF*
 
 
-#### ESPSL::removeSysLog();
+#### ESPSL::removeSysLog()
 This methos removes a system logfile from SPIFFS.
 <br>
 Return boolean. *true* if succeeded, otherwise *false*
 
 
-#### ESPSL::getLastLineID();
+#### ESPSL::getLastLineID()
 Internaly the ESP_SysLogger uses sequential *lineID*'s to uniquely
 identify each log line in the file. With this methos you can query
 the last used *lineID*.
@@ -171,7 +171,7 @@ the last used *lineID*.
 Return uint32_t. Last used *lineID*.
 
 
-#### ESPSL::setDebugLvl(int8_t debugLvl);
+#### ESPSL::setDebugLvl(int8_t debugLvl)
 If *_DODEBUG* is defines in the *ESP_SysLogger.h* file you can use this
 method to set the debug level to display specific Debug lines to *SERIAL*.
 
