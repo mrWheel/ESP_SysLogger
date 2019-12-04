@@ -165,7 +165,7 @@ Return boolean. **true** if succeeded, otherwise **false**
 
 #### ESPSL::getLastLineID()
 Internaly the ESP_SysLogger uses sequential **lineID**'s to uniquely
-identify each log line in the file. With this methos you can query
+identify each log line in the file. With this method you can query
 the last used **lineID**.
 <br>
 Return uint32_t. Last used **lineID**.
