@@ -348,7 +348,7 @@ boolean ESPSL::writeD(const char *callFunc, int atLine, const char *fmt, ...)
 //-------------------------------------------------------------------------------------
 boolean ESPSL::writeD(int HH, int MM, int SS, const char *callFunc, int atLine, const char *fmt, ...)
 {
-  char tLine[_MAXLINEWIDTH + 10];
+  char tLine[_MAXLINEWIDTH +10];
   char lineBuf[_MAXLINEWIDTH +10];
   
   tLine[0]    = '\0';
