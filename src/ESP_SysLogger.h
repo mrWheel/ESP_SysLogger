@@ -17,6 +17,7 @@
 
 class ESPSL {
 
+//	#define _DODEBUG
   #define _MAXLINEWIDTH 150
   
 public:
