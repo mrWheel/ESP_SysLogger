@@ -16,6 +16,8 @@
 #endif
 
 class ESPSL {
+
+  #define _MAXLINEWIDTH 150
   
 public:
   ESPSL();
@@ -40,13 +42,12 @@ public:
 private:
 
   const char* _sysLogFile = "/sysLog.dat";
-  int16_t     _MAXLINEWIDTH = 150;
   uint32_t    _lastUsedLineID;
   uint32_t    _oldestLineID;
   int32_t     _noLines;
   int32_t     _lineWidth;
   uint32_t    _readPointer;
-  int16_t     _readEnd;
+  uint32_t    _readEnd;
   int8_t      _debugLvl = 0;
   char        _cRec[_MAXLINEWIDTH +20];
   const char* _emptyID = "@!@!@!@!";
