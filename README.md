@@ -67,15 +67,15 @@ This Logline:
 ```
      writeToSysLog("Reset Reason [%s]", ESP.getResetReason().c_str());
 ```
-looks like this (the first line):
+looks like this wth the first **writeToSysLog()** example (the first line):
 ```
-   [12:30:22][  46120| 45952] [setup       ( 179)] Reset Reason [External System] 
-   [19:51:03][  45616| 44912] [showBareLogF(  62)] Dump logFile [sysLog.dumpLogFile()]
+   [12:30:22][setup       ] Reset Reason [External System] 
+   [19:51:03][showBareLogF] Dump logFile [sysLog.dumpLogFile()]
 ```
-the macro add's the time, free heap, the larges block of heap, the name of the function in which this
-log line was written and the line number in that function:
+the macro add's the time, and the function-name that called this
+**writeToSysLog()** macro
 ```
-   [12:30:22][  46120| 45952] [setup       ( 179)]
+   [12:30:22][setup       ] <rest of the log text>
 ```
 
 ## Methods
