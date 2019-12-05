@@ -3,24 +3,25 @@
 ###########################################
 
 ###########################################
-# Datatypes              (KEYWORD1)
+# Datatypes							 (KEYWORD1)
 ###########################################
 
-ESPSL               			KEYWORD1
-ESP_SysLogger       			KEYWORD1
+ESPSL							KEYWORD1
+ESP_SysLogger							KEYWORD1
 
 ###########################################
-# Methods and Functions  (KEYWORD2)
+# Methods and Functions	 (KEYWORD2)
 ###########################################
 
-write               			KEYWORD2
-writef              			KEYWORD2
-writeD              			KEYWORD2
-startReading      				KEYWORD2
-readNextLine       				KEYWORD2
-dumpLogFile        				KEYWORD2
-removeSysLog       				KEYWORD2
-getLastLineID      				KEYWORD2
-setDebugLvl        				KEYWORD2
+write							KEYWORD2
+writef							KEYWORD2
+writeDbg							KEYWORD2
+buildD							KEYWORD2
+startReading							KEYWORD2
+readNextLine							KEYWORD2
+dumpLogFile							KEYWORD2
+removeSysLog							KEYWORD2
+getLastLineID							KEYWORD2
+setDebugLvl							KEYWORD2
 
 

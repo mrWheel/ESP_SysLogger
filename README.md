@@ -103,27 +103,29 @@ This method will write a line of text to the system logfile.
 Return boolean. **true** if succeeded, otherwise **false**
 
 
-#### ESPSL::writef(const char *fmt, ...)
+#### ESPSL::writef(const char \*fmt, ...)
 This method will write a formatted line of text to the system logfile.
 The syntax is the same as **printf()**.
 <br>
 Return boolean. **true** if succeeded, otherwise **false**
 
 
-#### ESPSL::writeD(const char *callFunc, int atLine, const char *fmt, ...)
-This method will write a formatted line of text to the system logfile.
-The syntax is the same as **printf()**.
+#### ESPSL::writeDbg(const char *dbg, const char *fmt, ...)
+This method will write a formatted line of text to the system logfile but with
+a string in front of it. This 'string' can be formatted using ESPSL::build().
+The syntax for **\*fmt, ...** is the same as **printf()**.
 This method is ment to be used with the **writeToSysLog()** macro.
 <br>
 Return boolean. **true** if succeeded, otherwise **false**
 
 
-#### ESPSL::writeD(int HH, int MM, int SS, const char *callFunc, int atLine, const char *fmt, ...)
-This method will write a formatted line of text to the system logfile.
-The syntax is the same as **printf()**.
-This method is ment to be used with the **writeToSysLog()** macro.
+#### ESPSL::buildD(const char *fmt, ...)
+This method will return a formatted line of text.
+The syntax for **\*fmt, ..** is the same as **printf()**.
+This method is ment to be used to 'feed' the ESPSL:writeDbg() 
+method.
 <br>
-Return boolean. **true** if succeeded, otherwise **false**
+Return char\*. 
 
 
 #### ESPSL::startReading(int16_t startLine, uint8_t numLines)

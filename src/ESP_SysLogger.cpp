@@ -1,6 +1,8 @@
 /*
 **  Program   : ESP_SysLogger.cpp
 **
+**  Version   : 1.5.0		(05-12-2019)
+**
 **  Copyright (c) 2019 Willem Aandewiel
 **
 **  TERMS OF USE: MIT License. See bottom of file.
@@ -18,7 +20,7 @@ boolean ESPSL::begin(uint16_t depth, uint16_t lineWidth)
 #ifdef _DODEBUG
   if (_Debug(1)) Serial.printf("ESPSL::begin(%d, %d)..\n", depth, lineWidth);
 #endif
-  char lineBuf[_MAXLINEWIDTH + 10];
+
   int16_t fileSize;
 
   if (lineWidth > _MAXLINEWIDTH) lineWidth = _MAXLINEWIDTH;
@@ -162,10 +164,8 @@ boolean ESPSL::init()
   if (_Debug(1)) Serial.println(F("ESPSL::init().."));
 #endif
 
-  char logText[_MAXLINEWIDTH +20];
-  char lineBuf[_MAXLINEWIDTH +10];
+  char    logText[_MAXLINEWIDTH +20];
   int16_t recNr = 0;
-  //_nextFree = 0;
       
   // --- check if the file exists and can be opened ---
   File _logFile  = SPIFFS.open(_sysLogFile, "r");    // open for reading and writing
@@ -232,9 +232,10 @@ boolean ESPSL::write(const char* logLine)
   if (_Debug(3)) Serial.printf("ESPSL::write(%s)..\r\n", logLine);
 #endif
 
-  int32_t 	bytesWritten;
-  uint16_t 	seekToLine;
-  int nextFree;
+  int32_t   bytesWritten;
+  uint16_t  seekToLine;
+  int       nextFree;
+  
   _cRec[0] = '\0';  
   
   // --- check if the file exists and can be opened ---
@@ -292,10 +293,10 @@ boolean ESPSL::writef(const char *fmt, ...)
   if (_Debug(3)) Serial.printf("ESPSL::writef(%s)..\r\n", fmt);
 #endif
 
-  int32_t 	bytesWritten;
-  uint16_t 	seekToLine;
-  int nextFree;
-  char lineBuf[_MAXLINEWIDTH + 10];
+  int32_t   bytesWritten;
+  uint16_t  seekToLine;
+  int       nextFree;
+
   _cRec[0] = '\0';  
   
   // --- check if the file exists and can be opened ---
@@ -352,70 +353,58 @@ boolean ESPSL::writef(const char *fmt, ...)
 
 
 //-------------------------------------------------------------------------------------
-boolean ESPSL::writeD(const char *callFunc, int atLine, const char *fmt, ...)
+boolean ESPSL::writeDbg(const char *dbg, const char *fmt, ...) 
 {
-  char tLine[_MAXLINEWIDTH + 10];
-  char lineBuf[_MAXLINEWIDTH +10];
-  
-  tLine[0] 	  = '\0';
+#ifdef _DODEBUG
+  if (_Debug(3)) Serial.printf("ESPSL::writeDbg(%s, %s)..\r\n", dbg, fmt);
+#endif
+
+  int32_t   bytesWritten;
+  uint16_t  seekToLine;
+  int       nextFree;
+  char      dbgStr[_MAXLINEWIDTH + 10];
+
+  _cRec[0]    = '\0';  
+  dbgStr[0]   = '\0';
   lineBuf[0]  = '\0';
 
-#if defined(ESP8266)
-  sprintf(tLine, "[%7u|%6u] [%-12.12s(%4d)] " , ESP.getFreeHeap(), ESP.getMaxFreeBlockSize()
-                                                , callFunc, atLine);
-#else
-  sprintf(tLine, "[%-12.12s(%4d)] ", callFunc, atLine);
-#endif
+  if (strlen(dbg) < (_MAXLINEWIDTH -20)) {
+    strcat(dbgStr, dbg);
+  }
 
   va_list args;
   va_start (args, fmt);
-  vsnprintf (lineBuf, _lineWidth, fmt, args);
+  vsnprintf (lineBuf, (_MAXLINEWIDTH), fmt, args);
   va_end (args);
-  while ((strlen(lineBuf) > 0) && (strlen(tLine) + strlen(lineBuf)) > (_MAXLINEWIDTH -1)) {
-  	lineBuf[strlen(lineBuf)-1] = '\0';
-  	yield();
+  
+  while ((strlen(lineBuf) > 0) && (strlen(dbgStr) + strlen(lineBuf)) > (_MAXLINEWIDTH -1)) {
+    lineBuf[strlen(lineBuf)-1] = '\0';
+    yield();
   }
-	if ((strlen(tLine) + strlen(lineBuf)) < _MAXLINEWIDTH) {
-		strcat(tLine, lineBuf);
-	}
-  write(tLine);
+  if ((strlen(dbgStr) + strlen(lineBuf)) < _MAXLINEWIDTH) {
+    strcat(dbgStr, lineBuf);
+  }
 
-}	// writeD()
+  write(dbgStr);
+
+} // writeDbg()
+
 
 //-------------------------------------------------------------------------------------
-boolean ESPSL::writeD(int HH, int MM, int SS, const char *callFunc, int atLine, const char *fmt, ...)
+char *ESPSL::buildD(const char *fmt, ...) 
 {
-  char tLine[_MAXLINEWIDTH +10];
-  char lineBuf[_MAXLINEWIDTH +10];
-  
-  tLine[0]    = '\0';
-  lineBuf[0]  = '\0';
-
-#if defined(ESP8266)
-    sprintf(tLine, "[%02d:%02d:%02d][%7u|%6u] [%-12.12s(%4d)] "
-                                                , HH, MM, SS
-                                                , ESP.getFreeHeap(), ESP.getMaxFreeBlockSize()
-                                                , callFunc, atLine);
-#else
-    sprintf(tLine, "[%02d:%02d:%02d] [%-12.12s(%4d)] "
-                                                , HH, MM, SS
-                                                , callFunc, atLine);
+#ifdef _DODEBUG
+  if (_Debug(3)) Serial.printf("ESPSL::buildD(%s)..\r\n", fmt);
 #endif
 
   va_list args;
   va_start (args, fmt);
-  vsnprintf (lineBuf, _lineWidth, fmt, args);
+  vsnprintf (lineBuf, (_MAXLINEWIDTH), fmt, args);
   va_end (args);
-  while ((strlen(lineBuf) > 0) && (strlen(tLine) + strlen(lineBuf)) > (_MAXLINEWIDTH -1)) {
-  	lineBuf[strlen(lineBuf)-1] = '\0';
-  	yield();
-  }
-	if ((strlen(tLine) + strlen(lineBuf)) < _MAXLINEWIDTH) {
-		strcat(tLine, lineBuf);
-	}
-  write(tLine);
 
-}	// writeD()
+  return lineBuf;
+  
+} // buildD()
 
 
 //-------------------------------------------------------------------------------------
@@ -468,8 +457,6 @@ String ESPSL::readNextLine()
 
   int32_t recNr = _readPointer;
   uint8_t seekToLine;
-  char    lineBuf[_lineWidth +10];
-  char    logText[_lineWidth];
 
   if (_readPointer > _readEnd) return("EOF");
   // --- check if the file exists and can be opened ---
@@ -494,23 +481,23 @@ String ESPSL::readNextLine()
     //Serial.printf("ESPSL::init(): [%d] -> [%s]\r\n", l, lineBuf);
     sscanf(lineBuf,"%u;%[^\0]", 
             &lineID,
-            logText);
+            lineBuf);
 
 #ifdef _DODEBUG
     if (_Debug(4)) Serial.printf("ESPSL::readNextLine(): [%4d]->recNr[%4d][%8d]-> [%s]\r\n"
                                                             , seekToLine
                                                             , recNr
                                                             , lineID
-                                                            , logText);
+                                                            , lineBuf);
 #endif
     _readPointer++;
-    if (String(logText).indexOf(String(_emptyID)) == -1) {
+    if (String(lineBuf).indexOf(String(_emptyID)) == -1) {
       _logFile.close();
-      if (_Debug(3)) return String(lineBuf);
-      else           return String(logText);
+      if (_Debug(3)) return String(rtrim(lineBuf));
+      else           return String(rtrim(lineBuf));
 #ifdef _DODEBUG
     } else {
-      if (_Debug(4)) Serial.printf("ESPSL::readNextLine(): SKIP[%s]\r\n", logText);
+      if (_Debug(4)) Serial.printf("ESPSL::readNextLine(): SKIP[%s]\r\n", lineBuf);
 #endif
     }
     
@@ -519,7 +506,7 @@ String ESPSL::readNextLine()
   _logFile.close();
   return String("EOF");
 
-} //  readNextLine
+} //  readNextLine()
 
 //-------------------------------------------------------------------------------------
 // start reading from startLine
@@ -529,8 +516,6 @@ String ESPSL::dumpLogFile()
   if (_Debug(1)) Serial.println(F("ESPSL::dumpLogFile().."));
 #endif
 
-  char    lineBuf[_lineWidth +10];
-  char    logText[_lineWidth];
   int16_t recNr;
       
   // --- check if the file exists and can be opened ---
@@ -551,15 +536,15 @@ String ESPSL::dumpLogFile()
     if (_Debug(5)) Serial.printf("ESPSL::init(): [%d] -> [%s]\r\n", l, lineBuf);
     sscanf(lineBuf,"%u;%[^\0]", 
             &lineID,
-            logText);
+            lineBuf);
 
     if (lineID == _lastUsedLineID)
             Serial.printf("ESPSL::dumpLogFile(L): recNr[%4d][%8d]-> [%s]\r\n"
                           "           >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\r\n"
-                                                                      , recNr, lineID, logText);
+                                                                      , recNr, lineID, lineBuf);
     else if (lineID == _oldestLineID && recNr < _noLines)
-            Serial.printf("ESPSL::dumpLogFile(O): recNr[%4d][%8d]-> [%s]\r\n", recNr, lineID, logText);
-    else    Serial.printf("ESPSL::dumpLogFile( ): recNr[%4d][%8d]-> [%s]\r\n", recNr, lineID, logText);
+            Serial.printf("ESPSL::dumpLogFile(O): recNr[%4d][%8d]-> [%s]\r\n", recNr, lineID, lineBuf);
+    else    Serial.printf("ESPSL::dumpLogFile( ): recNr[%4d][%8d]-> [%s]\r\n", recNr, lineID, lineBuf);
     recNr++;
   } // while ..
 
@@ -656,6 +641,21 @@ boolean ESPSL::_Debug(int8_t Lvl)
 
 
 //===========================================================================================
+const char* ESPSL::rtrim(char *aChr)
+{
+  for(int p=strlen(aChr); p>0; p--)
+  {
+    if (aChr[p] < '!' || aChr[p] > '~') 
+    {
+      aChr[p] = '\0';
+    }
+    else
+      break;
+  }
+  return aChr;
+} // rtrim()
+
+//===========================================================================================
 void ESPSL::fixLineWidth(char *inLine, int len) 
 {
 #ifdef _DODEBUG
@@ -670,7 +670,7 @@ void ESPSL::fixLineWidth(char *inLine, int len)
   int16_t s = 0, l = 0;
   while (tmpRec[s] != '\0' && tmpRec[s] != '\n' && s < (_lineWidth -1)) {yield(); s++;}
   for (l = s; l < (len - 1); l++) {
-  	yield();
+    yield();
     tmpRec[l] = ' ';
   }
   tmpRec[l]   = '\n';
@@ -691,7 +691,7 @@ int16_t  ESPSL::sysLogFileSize()
   {
     Dir dir = SPIFFS.openDir("/");         // List files on SPIFFS
     while (dir.next())  {
-    			yield();
+          yield();
           String fileName = dir.fileName();
           size_t fileSize = dir.fileSize();
 #ifdef _DODEBUG

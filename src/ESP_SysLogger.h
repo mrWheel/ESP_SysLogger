@@ -1,6 +1,8 @@
 /*
 **  Program   : ESP_SysLogger.h
 **
+**  Version   : 1.5.0		(05-12-2019)
+**
 **  Copyright (c) 2019 Willem Aandewiel
 **
 **  TERMS OF USE: MIT License. See bottom of file.
@@ -17,7 +19,7 @@
 
 class ESPSL {
 
-//	#define _DODEBUG
+	#define _DODEBUG
   #define _MAXLINEWIDTH 150
   
 public:
@@ -28,8 +30,8 @@ public:
   void      status();
   boolean   write(const char*);
   boolean   writef(const char *fmt, ...);
-  boolean   writeD(const char *callFunc, int atLine, const char *fmt, ...);
-  boolean   writeD(int HH, int MM, int SS, const char *callFunc, int atLine, const char *fmt, ...);
+  char     *buildD(const char *fmt, ...);
+  boolean	 writeDbg(const char *dbg, const char *fmt, ...);
   boolean   startReading(int16_t startLine, uint8_t numLines);    // Returns last line read
   boolean   startReading(int16_t startLine);                      // Returns last line read
   String    readNextLine();
@@ -40,7 +42,7 @@ public:
     
 private:
 
-  const char* _sysLogFile = "/sysLog.dat";
+  const char *_sysLogFile = "/sysLog.dat";
   uint32_t    _lastUsedLineID;
   uint32_t    _oldestLineID;
   int32_t     _noLines;
@@ -49,10 +51,12 @@ private:
   uint32_t    _readEnd;
   int8_t      _debugLvl = 0;
   char        _cRec[_MAXLINEWIDTH +20];
-  const char* _emptyID = "@!@!@!@!";
+  char        lineBuf[_MAXLINEWIDTH + 10];
+  const char *_emptyID = "@!@!@!@!";
   
   boolean     create(uint16_t depth, uint16_t lineWidth);
   boolean     init();
+  const char *rtrim(char *);
   boolean     checkSysLogFileSize(const char* func, int32_t cSize);
   void        fixLineWidth(char *inLine, int len);
   int16_t     sysLogFileSize();
