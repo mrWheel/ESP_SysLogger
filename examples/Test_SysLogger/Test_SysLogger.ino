@@ -83,7 +83,7 @@ void testReadnext()
 {
   String lLine;
 
-  writeToSysLog("testing startReading() & readNextLine() functions............................................................................................");
+  writeToSysLog("testing startReading() & readNextLine() functions...");
   
   Serial.println("\n=====from oldest for 9 lines=========================");
   sysLog.startReading(0, 9);
@@ -185,6 +185,7 @@ void setup()
 
   //--> max linesize is declared by _MAXLINEWIDTH in the
   //    library and is set @150, so 160 will be truncated to 150!
+  //-----------------------------------------------------------------
   //if (!sysLog.begin(95, 160, true)) {   // create new sysLog file
   if (!sysLog.begin(95, 160)) {         // use existing sysLog file
     Serial.println("Error opening sysLog!");
@@ -231,15 +232,14 @@ void loop()
   else
   {
     writeToSysLog("LineCount is now [%d] @ID[%d]", lineCount++, (sysLog.getLastLineID() +1));
-    sysLog.writef("[plain writef()] LineCount is now [%d] @ID[%d]", lineCount++, (sysLog.getLastLineID() +1));
-    sysLog.writef("[no DebugInfo]   LineCount is now [%d] @ID[%d]", lineCount++, (sysLog.getLastLineID() +1));
-    writeToSysLog("LineCount is now [%d] @ID[%d]", lineCount,   (sysLog.getLastLineID() +1));
+    sysLog.writef("plain writef() LineCount is now [%d] @ID[%d]", lineCount++, (sysLog.getLastLineID() +1));
+    sysLog.writef("no DebugInfo   LineCount is now [%d] @ID[%d]", lineCount++, (sysLog.getLastLineID() +1));
   }
 
   if (lineCount > 20) 
   {
     Serial.println("\n");
-    sysLog.write("[plain ESPSL::write()] Simple log text");
+    sysLog.write("plain ESPSL::write() Simple log text");
     listSPIFFS();
     Serial.println("==========================================");
     sysLog.status();
