@@ -122,7 +122,7 @@ boolean ESPSL::create(uint16_t depth, uint16_t lineWidth)
 
   sprintf(globalBuff, "%08d;%d;%d; META DATA ESP_SysLogger", 0, _noLines, _lineWidth);
   fixLineWidth(globalBuff, _recLength);
-  Serial.printf("create(): rec(0) [%s](%d bytes)\r\n", globalBuff, strlen(globalBuff));
+  if (_Debug(1)) Serial.printf("create(): rec(0) [%s](%d bytes)\r\n", globalBuff, strlen(globalBuff));
   bytesWritten = _logFile.print(globalBuff);
   _logFile.flush();
   if (bytesWritten != _recLength) {
@@ -267,9 +267,9 @@ boolean ESPSL::write(const char* logLine)
   char *lineBuf = (char*)malloc( sizeof(char) * (_recLength + 10) );
   if (lineBuf == NULL) 
   {
-  	Serial.println("write(): malloc(lineBuf) error!");
+    Serial.println("write(): malloc(lineBuf) error!");
     Serial.flush();
-  	return false;
+    return false;
   }
   lineBuf[0]    = '\0';
   globalBuff[0] = '\0';
@@ -334,9 +334,9 @@ boolean ESPSL::writef(const char *fmt, ...)
   char *lineBuf = (char*)malloc( sizeof(char) * (_MAXLINEWIDTH + 10) );
   if (lineBuf == NULL) 
   {
-  	Serial.println("writef(): malloc(lineBuf) error!");
+    Serial.println("writef(): malloc(lineBuf) error!");
     Serial.flush();
-  	return false;
+    return false;
   }
   lineBuf[0]    = '\0';
 
@@ -684,11 +684,11 @@ void ESPSL::fixLineWidth(char *inLine, int len)
   // remove all non printable chars ...
   for (int p=0; p < (strlen(fixLine) -1); p++) 	// skip last '\n' and '\0'
   {
-  	if (fixLine[p] < ' ' || fixLine[p] > '~') 
-  	{
-  		fixLine[p] = '*';
-  		yield();
-  	}
+    if (fixLine[p] < ' ' || fixLine[p] > '~') 
+    {
+      fixLine[p] = '*';
+      yield();
+    }
   }
   fixLine[len] = '\0';
   
@@ -707,7 +707,7 @@ void ESPSL::fixLineWidth(char *inLine, int len)
   if (_Debug(4)) Serial.printf("ESPSL::fixLineWidth(): Length of inLine is [%d] bytes\r\n", strlen(inLine));
 #endif
 
-	free(fixLine);
+  free(fixLine);
   
 } // fixLineWidth()
 
