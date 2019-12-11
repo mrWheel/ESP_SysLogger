@@ -1,6 +1,8 @@
 # ESP_SysLogger
 A system Logger Library for the ESP micro controller chips
 
+The footprint is about 40k of program storage space and 2.4k of dynamic memory.
+
 ## setup your code
 
 You need to include "ESP_SysLogger.h"
@@ -70,7 +72,6 @@ This Logline:
 looks like this wth the first **writeToSysLog()** example (the first line):
 ```
    [12:30:22][setup       ] Reset Reason [External System] 
-   [19:51:03][showBareLogF] Dump logFile [sysLog.dumpLogFile()]
 ```
 the macro add's the time, and the function-name that called this
 **writeToSysLog()** macro

@@ -1,7 +1,7 @@
 /*
 **  Program   : ESP_SysLogger.h
 **
-**  Version   : 1.5.0		(05-12-2019)
+**  Version   : 1.6.0   (11-12-2019)
 **
 **  Copyright (c) 2019 Willem Aandewiel
 **
@@ -19,7 +19,7 @@
 
 class ESPSL {
 
-	//#define _DODEBUG
+  //  #define _DODEBUG
   #define _MAXLINEWIDTH 150
   
 public:
@@ -31,7 +31,7 @@ public:
   boolean   write(const char*);
   boolean   writef(const char *fmt, ...);
   char     *buildD(const char *fmt, ...);
-  boolean	 writeDbg(const char *dbg, const char *fmt, ...);
+  boolean   writeDbg(const char *dbg, const char *fmt, ...);
   boolean   startReading(int16_t startLine, uint8_t numLines);    // Returns last line read
   boolean   startReading(int16_t startLine);                      // Returns last line read
   String    readNextLine();
@@ -43,15 +43,16 @@ public:
 private:
 
   const char *_sysLogFile = "/sysLog.dat";
+  File        _sysLog;
   uint32_t    _lastUsedLineID;
   uint32_t    _oldestLineID;
   int32_t     _noLines;
   int32_t     _lineWidth;
+  int32_t     _recLength;
   uint32_t    _readPointer;
   uint32_t    _readEnd;
   int8_t      _debugLvl = 0;
-  char        _cRec[_MAXLINEWIDTH +20];
-  char        lineBuf[_MAXLINEWIDTH + 10];
+  char        globalBuff[_MAXLINEWIDTH +15];
   const char *_emptyID = "@!@!@!@!";
   
   boolean     create(uint16_t depth, uint16_t lineWidth);
