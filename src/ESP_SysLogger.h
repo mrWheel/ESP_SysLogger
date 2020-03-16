@@ -19,7 +19,7 @@
 
 class ESPSL {
 
-  //  #define _DODEBUG
+  #define _DODEBUG
   #define _MAXLINEWIDTH 150
   
 public:
@@ -32,17 +32,28 @@ public:
   boolean   writef(const char *fmt, ...);
   char     *buildD(const char *fmt, ...);
   boolean   writeDbg(const char *dbg, const char *fmt, ...);
-  boolean   startReading(int16_t startLine, uint8_t numLines);    // Returns last line read
+  boolean   startReading(int16_t startLine, int16_t numLines);    // Returns last line read
   boolean   startReading(int16_t startLine);                      // Returns last line read
   String    readNextLine();
   String    dumpLogFile();
   boolean   removeSysLog();
   uint32_t  getLastLineID();
+  void      setOutput(HardwareSerial *serIn, int baud);
+  void      setOutput(Stream *serIn);
+  void      print(const char*);
+  void      println(const char*);
+  void      printf(const char *fmt, ...);
+  void      flush();
   void      setDebugLvl(int8_t debugLvl);
     
 private:
 
   const char *_sysLogFile = "/sysLog.dat";
+  HardwareSerial  *_Serial;
+  Stream          *_Stream;
+  boolean         _streamOn;
+  boolean         _serialOn;
+
   File        _sysLog;
   uint32_t    _lastUsedLineID;
   uint32_t    _oldestLineID;
@@ -60,7 +71,7 @@ private:
   const char *rtrim(char *);
   boolean     checkSysLogFileSize(const char* func, int32_t cSize);
   void        fixLineWidth(char *inLine, int len);
-  int16_t     sysLogFileSize();
+  int32_t     sysLogFileSize();
   int8_t      getDebugLvl();
   boolean     _Debug(int8_t Lvl);
 

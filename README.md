@@ -105,13 +105,33 @@ Return boolean. **true** if succeeded, otherwise **false**
 Display some internal var's of the system logfile to **Serial**.
 
 
+#### ESPSL::setOutput(HardwareSerial *serIn, int baud)
+Set the debug output to serIn.
+
+
+#### ESPSL::setOutput(Stream *serIn)
+Set the debug output to serIn.
+
+
+#### ESPSL::print(const char *line)
+Prints the **line** to **serIn**.
+
+
+#### ESPSL::println(const char *line)
+Prints the **line** to **serIn** (and add a '\\n' at the end)
+
+
+#### ESPSL::printf(const char *fmt, ...)
+Prints formatted line to **serIn** 
+
+
 #### ESPSL::write(const char*)
 This method will write a line of text to the system logfile.
 <br>
 Return boolean. **true** if succeeded, otherwise **false**
 
 
-#### ESPSL::writef(const char \*fmt, ...)
+#### ESPSL::writef(const char *fmt, ...)
 This method will write a formatted line of text to the system logfile.
 The syntax is the same as **printf()**.
 <br>
