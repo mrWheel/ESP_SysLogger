@@ -1,9 +1,9 @@
 /*
 **  Program   : ESP_SysLogger.h
 **
-**  Version   : 1.6.0   (11-12-2019)
+**  Version   : 1.6.3   (19-03-2020)
 **
-**  Copyright (c) 2019 Willem Aandewiel
+**  Copyright (c) 2020 Willem Aandewiel
 **
 **  TERMS OF USE: MIT License. See bottom of file.
 ***************************************************************************/
@@ -40,10 +40,6 @@ public:
   uint32_t  getLastLineID();
   void      setOutput(HardwareSerial *serIn, int baud);
   void      setOutput(Stream *serIn);
-  void      print(const char*);
-  void      println(const char*);
-  void      printf(const char *fmt, ...);
-  void      flush();
   void      setDebugLvl(int8_t debugLvl);
     
 private:
@@ -72,6 +68,10 @@ private:
   boolean     checkSysLogFileSize(const char* func, int32_t cSize);
   void        fixLineWidth(char *inLine, int len);
   int32_t     sysLogFileSize();
+  void        print(const char*);
+  void        println(const char*);
+  void        printf(const char *fmt, ...);
+  void        flush();
   int8_t      getDebugLvl();
   boolean     _Debug(int8_t Lvl);
 

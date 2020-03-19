@@ -1,9 +1,9 @@
 /*
 **  Program   : ESP_SysLogger.cpp
 **
-**  Version   : 1.6.0   (11-12-2019)
+**  Version   : 1.6.3   (19-03-2020)
 **
-**  Copyright (c) 2019 Willem Aandewiel
+**  Copyright (c) 2020 Willem Aandewiel
 **
 **  TERMS OF USE: MIT License. See bottom of file.
 ***************************************************************************/
@@ -755,7 +755,7 @@ void ESPSL::fixLineWidth(char *inLine, int len)
 
   strncat(fixLine, inLine, len);
   // remove all non printable chars ...
-  for (int p=0; p < (strlen(fixLine) -1); p++) 	// skip last '\n' and '\0'
+  for (int p=0; p < (strlen(fixLine) -1); p++)  // skip last '\n' and '\0'
   {
     if (fixLine[p] < ' ' || fixLine[p] > '~') 
     {
